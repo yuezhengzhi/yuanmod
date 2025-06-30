@@ -1,0 +1,103 @@
+namespace = yuan_leader
+# 领袖创建
+country_event = {
+    id = yuan_leader.1
+    hide_window = yes
+    is_triggered_only = yes
+    trigger = {
+        has_trait = leader_trait_orthis
+        is_ai = no
+    }
+    immediate = {
+        country_event = {
+            id = yuan_leader.1
+            days = 60
+            random = 3
+        }
+        if = {
+            limit = {
+                NOT = {
+                    has_edict = yuan_leader_edict_1
+                }
+            }
+            # 舰队领袖
+            if = {
+                limit = {
+                    NOT = {
+                        has_edict =yuan_leader_edict_2
+                    }
+                }
+                yuan_leader_military_ship_effect = yes
+                if = {
+                    limit = {
+                        has_edict =yuan_leader_edict
+                    }
+                    yuan_leader_military_ship_effect = yes
+                }
+            }
+            # 陆军领袖
+            if = {
+                limit = {
+                    not = {
+                        has_edict = yuan_leader_edict_3
+                    }
+                }
+                yuan_leader_army_ship_effect = yes
+                if = {
+                    limit = {
+                        has_edict = yuan_leader_edict
+                    }
+                    yuan_leader_army_ship_effect = yes
+                }
+            }
+            # 科研船领袖
+            if = {
+                limit = {
+                    not = {
+                        has_edict = yuan_leader_edict_4
+                    }
+                }
+                yuan_leader_science_ship_effect = yes
+                if = {
+                    limit = {
+                        has_edict = yuan_leader_edict
+                    }
+                    yuan_leader_science_ship_effect = yes
+                }
+            }
+            # 星球领袖
+            if = {
+                limit = {
+                    not = {
+                        has_edict = yuan_leader_edict_5
+                    }
+                }
+                yuan_leader_planet_effect = yes
+                if = {
+                    limit = {
+                        has_edict = yuan_leader_edict
+                    }
+                    yuan_leader_planet_effect = yes
+                }
+            }
+            # 星球领袖-陆军司令
+            if = {
+                limit = {
+                    not = {
+                        has_edict = yuan_leader_edict_6
+                    }
+                }
+                yuan_leader_army_effect = yes
+                if = {
+                    limit = {
+                        has_edict = yuan_leader_edict
+                    }
+                    yuan_leader_army_effect = yes
+                }
+            }
+        }
+    }
+}
+
+
+
