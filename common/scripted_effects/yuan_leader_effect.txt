@@ -1,0 +1,514 @@
+## 领袖创建
+# 星球领袖创建
+yuan_leader_planet_effect = {
+    # 随机选择一个拥有的星球
+    random_owned_planet = {
+        # 限制条件：该星球不能满足以下两个条件中任意一个：
+        # 1. 存在领袖
+        # 2. 突触凝练机
+        # 并且该星球至少有1个pop
+        limit = {
+            nor = {
+                exists = leader
+                uses_district_set = cosmogenesis_world
+            }
+            num_pops >= 1
+        }
+
+        # 如果星球有yuan_leader_planet_official标志
+        if = {
+            limit = {
+                has_planet_flag = yuan_leader_planet_official
+            }
+            root = {
+                # 创建一个官员类领袖
+                create_leader = {
+                    class = official
+                    skill = 1
+                    immortal = yes       # 不朽
+                    hide_age = yes       # 隐藏年龄
+                    hide_leader = yes    # 隐藏领袖
+                    event_leader = yes   # 事件领袖
+                    randomize_traits = no # 不随机化特性
+                    can_assign_to_council = no # 不能分配到议会
+                    can_manually_change_location = no # 不能手动改变位置
+                    background_planet = prev # 背景星球为前一个星球
+                    species = owner_main_species # 物种为拥有者的主要物种
+                    name = yuan_leader_official_node # 名称为yuan_leader_official_node
+                }
+                # 对最后创建的领袖设置属性
+                last_created_leader = {
+                    set_skill = owner.ruler.trigger:has_base_skill # 设置技能为拥有者统治者的基础技能
+                    set_leader_flag = yuan_leader_node # 设置领袖标志
+                    set_leader_flag = yuan_leader_plant
+                    set_leader_flag = immune_to_negative_traits # 设置免疫负面特性标志
+                    set_leader_flag = leader_death_events_blocked # 设置领袖死亡事件阻挡标志
+                    add_trait = {
+                        trait = subclass_official_governor # 添加子类官员特性
+                        show_message = no # 不显示消息
+                    }
+                    change_leader_portrait = GFX_leader_official # 更改领袖肖像
+                }
+            }
+        }
+
+        # 如果星球有yuan_leader_planet_scientist标志
+        else_if = {
+            limit = {
+                has_planet_flag = yuan_leader_planet_scientist
+            }
+            root = {
+                # 创建一个科学家类领袖
+                create_leader = {
+                    class = scientist
+                    skill = 1
+                    immortal = yes
+                    hide_age = yes
+                    hide_leader = yes
+                    event_leader = yes
+                    randomize_traits = no
+                    can_assign_to_council = no
+                    can_manually_change_location = no
+                    background_planet = prev
+                    species = owner_main_species
+                    name = yuan_leader_scientist_node
+                }
+                # 对最后创建的领袖设置属性
+                last_created_leader = {
+                    set_skill = owner.ruler.trigger:has_base_skill
+                    set_leader_flag = yuan_leader_plant
+                    set_leader_flag = yuan_leader_node
+                    set_leader_flag = immune_to_negative_traits
+                    set_leader_flag = leader_death_events_blocked
+                    add_trait = {
+                        trait = subclass_scientist_governor
+                        show_message = no
+                    }
+                    change_leader_portrait = GFX_leader_scientist
+                }
+            }
+        }
+
+        # 如果星球有yuan_leader_planet_commander标志
+        else_if = {
+            limit = {
+                has_planet_flag = yuan_leader_planet_commander
+            }
+            root = {
+                # 创建一个指挥官类领袖
+                create_leader = {
+                    class = commander
+                    skill = 1
+                    immortal = yes
+                    hide_age = yes
+                    hide_leader = yes
+                    event_leader = yes
+                    randomize_traits = no
+                    can_assign_to_council = no
+                    can_manually_change_location = no
+                    background_planet = prev
+                    species = owner_main_species
+                    name = yuan_leader_commander_node
+                }
+                # 对最后创建的领袖设置属性
+                last_created_leader = {
+                    set_skill = owner.ruler.trigger:has_base_skill
+                    set_leader_flag = yuan_leader_node
+                    set_leader_flag = yuan_leader_plant
+                    set_leader_flag = immune_to_negative_traits
+                    set_leader_flag = leader_death_events_blocked
+                    add_trait = {
+                        trait = subclass_commander_governor
+                        show_message = no
+                    }
+                    change_leader_portrait = GFX_leader_commander
+                }
+            }
+        }
+
+        # 如果星球有yuan_leader_planet_none标志且领袖有yuan_leader_node标志
+        else_if = {
+            limit = {
+                has_planet_flag = yuan_leader_planet_none
+                leader = {
+                    has_leader_flag = yuan_leader_plant
+                }
+            }
+            # 杀死所有指定类的领袖且不显示通知
+            kill_leader = {
+                class = official
+                show_notification = no
+            }
+            kill_leader = {
+                class = scientist
+                show_notification = no
+            }
+            kill_leader = {
+                class = commander
+                show_notification = no
+            }
+        }
+
+        # 将最后创建的领袖分配给星球
+        assign_leader = last_created_leader
+    }
+}
+# 科研船领袖创建
+yuan_leader_science_ship_effect = {
+    every_owned_fleet = {
+        limit = {
+            is_ship_class = shipclass_science_ship
+            not = { exists = leader }
+        }
+        root = {
+            create_leader = {
+                class = scientist
+                skill = 1
+                immortal = yes
+                hide_age = yes
+                hide_leader = yes
+                event_leader = yes
+                randomize_traits = no
+                can_assign_to_council = no
+                can_manually_change_location = no
+                species = owner_main_species
+                name = yuan_leader_scientist_node
+            }
+            last_created_leader = {
+                set_skill = owner.ruler.trigger:has_base_skill
+                set_leader_flag = yuan_leader_node
+                set_leader_flag = yuan_leader_science_ship
+                set_leader_flag = immune_to_negative_traits
+                set_leader_flag = leader_death_events_blocked
+                random_list = {
+                    1 = {
+                        add_trait = {
+                            trait = subclass_scientist_scholar
+                            show_message = no
+                        }
+                    }
+                    1 = {
+                        add_trait = {
+                            trait = subclass_scientist_explorer
+                            show_message = no
+                        }
+                    }
+                }
+                change_leader_portrait = GFX_leader_scientist
+            }
+        }
+        assign_leader = last_created_leader
+    }
+}
+# 舰队领袖创建
+yuan_leader_military_ship_effect = {
+    random_owned_fleet = {
+        limit = {
+            is_ship_class = shipclass_military
+            not = { exists = leader }
+        }
+        root = {
+            create_leader = {
+                class = commander
+                skill = 1
+                immortal = yes
+                hide_age = yes
+                hide_leader = yes
+                event_leader = yes
+                randomize_traits = no
+                can_assign_to_council = no
+                can_manually_change_location = no
+                species = owner_main_species
+                name = yuan_leader_commander_node
+            }
+            last_created_leader = {
+                set_skill = owner.ruler.trigger:has_base_skill
+                set_leader_flag = yuan_leader_node
+                set_leader_flag = yuan_leader_military_ship
+                set_leader_flag = immune_to_negative_traits
+                set_leader_flag = leader_death_events_blocked
+                add_trait = {
+                    trait = subclass_commander_general
+                    show_message = no
+                }
+                change_leader_portrait = GFX_leader_commander
+            }
+        }
+        assign_leader = last_created_leader
+    }
+}
+# 陆军领袖创建
+yuan_leader_army_ship_effect = {
+    every_owned_fleet = {
+        limit = {
+            is_ship_class = shipclass_transport
+            has_fleet_flag = yuan_leader_fleet_ship
+        }
+        remove_fleet_flag = yuan_leader_fleet_ship
+    }
+    every_owned_army = {
+        limit = {
+            exists = fleet
+            exists = leader
+        }
+        fleet = { set_fleet_flag = yuan_leader_fleet_ship }
+    }
+    random_owned_army = {
+        limit = {
+            exists = fleet
+            fleet = { not = { has_fleet_flag = yuan_leader_fleet_ship } }
+            not = { exists = leader }
+        }
+        fleet = { set_fleet_flag = yuan_leader_fleet_ship }
+        root = {
+            create_leader = {
+                class = commander
+                skill = 1
+                immortal = yes
+                hide_age = yes
+                hide_leader = yes
+                event_leader = yes
+                randomize_traits = no
+                can_assign_to_council = no
+                can_manually_change_location = no
+                species = owner_main_species
+                name = yuan_leader_commander_node
+            }
+            last_created_leader = {
+                set_skill = owner.ruler.trigger:has_base_skill
+                set_leader_flag = yuan_leader_node
+                set_leader_flag = yuan_leader_fleet_ship
+                set_leader_flag = immune_to_negative_traits
+                set_leader_flag = leader_death_events_blocked
+                add_trait = {
+                    trait = subclass_commander_general
+                    show_message = no
+                }
+                change_leader_portrait = GFX_leader_commander
+            }
+        }
+        assign_leader = last_created_leader
+    }
+}
+# 陆军(星球)领袖创建
+yuan_leader_army_effect = {
+    every_owned_planet = {
+        limit = {
+            has_planet_flag = yuan_leader_army
+        }
+        remove_planet_flag = yuan_leader_army
+    }
+    every_owned_army = {
+        limit = {
+            exists = planet
+            exists = leader
+        }
+        planet = { set_planet_flag = yuan_leader_army }
+    }
+    random_owned_army = {
+        limit = {
+            exists = planet
+            planet = { not = { has_planet_flag = yuan_leader_army } }
+            not = { exists = leader }
+        }
+        planet = { set_planet_flag = yuan_leader_army }
+        root = {
+            create_leader = {
+                class = commander
+                skill = 1
+                immortal = yes
+                hide_age = yes
+                hide_leader = yes
+                event_leader = yes
+                randomize_traits = no
+                can_assign_to_council = no
+                can_manually_change_location = no
+                species = owner_main_species
+                name = yuan_leader_commander_node
+            }
+            last_created_leader = {
+                set_skill = owner.ruler.trigger:has_base_skill
+                set_leader_flag = yuan_leader_node
+                set_leader_flag = yuan_leader_army
+                set_leader_flag = immune_to_negative_traits
+                set_leader_flag = leader_death_events_blocked
+                add_trait = {
+                    trait = subclass_commander_general
+                    show_message = no
+                }
+                change_leader_portrait = GFX_leader_commander
+            }
+        }
+        assign_leader = last_created_leader
+        }
+}
+# 内阁领袖创建
+# 无法自动化创建 需手动指定所有内阁类型 待研究
+# 等级同步&肖像转换
+yuan_leader_level_effect = {
+    # 如果统治者拥有至少10点基础技能
+    if = {
+        limit = { ruler = { has_base_skill >= 10 } }
+        # 对所有满足条件的已拥有领袖进行操作
+        every_owned_leader = {
+            limit = {
+                has_leader_flag = yuan_leader_node  # 必须拥有 yuan_leader_node 标志
+                nor = {  # 且不能同时拥有以下两个标志
+                    has_leader_flag = renowned_leader
+                    has_leader_flag = legendary_leader
+                }
+            }
+        }
+        # 设置技能值为10
+        set_skill = 10
+        # 如果领袖拥有海军指挥官或陆军指挥官子类特质
+        if = {
+            limit = {
+                or = {
+                    has_trait = subclass_commander_admiral
+                    has_trait = subclass_commander_general
+                }
+            }
+            # 更改领袖肖像为指挥官3级肖像
+            change_leader_portrait = GFX_leader_commander_3
+        }
+        # 否则如果领袖职业是科学家
+        else_if = {
+            limit = {
+                leader_class = scientist
+            }
+            # 更改领袖肖像为科学家3级肖像
+            change_leader_portrait = GFX_leader_scientist_3
+        }
+        # 否则如果领袖职业是官员
+        else_if = {
+            limit = {
+                leader_class = official
+            }
+            # 更改领袖肖像为官员3级肖像
+            change_leader_portrait = GFX_leader_official_3
+        }
+        # 其他情况
+        else = {
+            # 更改领袖肖像为通用3级肖像
+            change_leader_portrait = GFX_leader_3
+        }
+    }
+    # 如果统治者不满足基础技能>=10的条件
+    else = {
+        # 对所有满足条件的已拥有领袖进行操作
+        every_owned_leader = {
+            limit = {
+                has_leader_flag = yuan_leader_node  # 必须拥有 yuan_leader_node 标志
+                nor = {  # 且不能同时拥有以下两个标志
+                    has_leader_flag = renowned_leader
+                    has_leader_flag = legendary_leader
+                }
+            }
+            # 设置技能值为统治者的基础技能值
+            set_skill = owner.ruler.trigger:has_base_skill
+            # 指挥官分支
+            if = {
+                limit = {
+                    or = {
+                        has_trait = subclass_commander_admiral
+                        has_trait = subclass_commander_general
+                    }
+                }
+                # 如果基础技能>=8
+                if = {
+                    limit = { has_base_skill >= 8 }
+                    # 更改领袖肖像为指挥官2级肖像
+                    change_leader_portrait = GFX_leader_commander_2
+                }
+                # 否则如果基础技能>=4
+                else_if = {
+                    limit = { has_base_skill >= 4 }
+                    # 更改领袖肖像为指挥官1级肖像
+                    change_leader_portrait = GFX_leader_commander_1
+                }
+            }
+            # 科学家分支
+            else_if = {
+                limit = {
+                    leader_class = scientist
+                }
+                # 如果基础技能>=8
+                if = {
+                    limit = { has_base_skill >= 8 }
+                    # 更改领袖肖像为科学家2级肖像
+                    change_leader_portrait = GFX_leader_scientist_2
+                }
+                # 否则如果基础技能>=4
+                else_if = {
+                    limit = { has_base_skill >= 4 }
+                    # 更改领袖肖像为科学家1级肖像
+                    change_leader_portrait = GFX_leader_scientist_1
+                }
+            }
+            # 官员分支
+            else_if = {
+                limit = {
+                    leader_class = official
+                }
+                # 如果基础技能>=8
+                if = {
+                    limit = { has_base_skill >= 8 }
+                    # 更改领袖肖像为官员2级肖像
+                    change_leader_portrait = GFX_leader_official_2
+                }
+                # 否则如果基础技能>=4
+                else_if = {
+                    limit = { has_base_skill >= 4 }
+                    # 更改领袖肖像为官员1级肖像
+                    change_leader_portrait = GFX_leader_official_1
+                }
+            }
+            # 其他情况分支
+            else = {
+                # 如果基础技能>=8
+                if = {
+                    limit = { has_base_skill >= 8 }
+                    # 更改领袖肖像为通用2级肖像
+                    change_leader_portrait = GFX_leader_2
+                }
+                # 否则如果基础技能>=4
+                else_if = {
+                    limit = { has_base_skill >= 4 }
+                    # 更改领袖肖像为通用1级肖像
+                    change_leader_portrait = GFX_leader_1
+                }
+            }
+        }
+    }
+}
+# 星球总督转换
+yuan_leader_planet_class_effect = {
+    every_owned_planet = {
+        limit = {
+            exists = leader
+            leader = {
+                has_leader_flag = yuan_leader_node
+                nor = {
+                    has_leader_flag = renowned_leader
+                    has_leader_flag = legendary_leader
+                }
+            }
+        }
+        if = {
+            limit = {
+                has_research_designation = yes
+                leader = { not = { leader_class = scientist } }
+            }
+            leader = {
+                remove_all_traits = yes
+                change_leader_class = scientist
+                add_trait = subclass_scientist_governor
+                clear_variable =
+            }
+        }
+    }
+}
+
+
+
